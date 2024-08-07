@@ -1,10 +1,11 @@
 from typing import Literal
 import json
+import pandas as pd
 from pandas import DataFrame
 import requests
 from models.Payload import Payload
 
-type SOURCE_ID = Literal['nac_clients','reg_clients','server_hour','affected_agg','affected_data']
+type SOURCE_ID = Literal['nac_clients','reg_clients','server_hour','affected_agg','affected_detail']
 type METHOD = Literal['POST','GET']
 class DataSource:
     """class with request data intrinsic"""
@@ -15,7 +16,7 @@ class DataSource:
         'reg_clients': 'https://apps.sec.cl/INTONLINEv1/ClientesAfectados/GetClientesRegional',
         'server_hour':'https://apps.sec.cl/INTONLINEv1/ClientesAfectados/GetHoraServer',
         #affected data
-        'affected_total':'https://apps.sec.cl/INTONLINEv1/ClientesAfectados/Get',
+        'affected_agg':'https://apps.sec.cl/INTONLINEv1/ClientesAfectados/Get',
         'affected_detail':'https://apps.sec.cl/INTONLINEv1/ClientesAfectados/GetPorFecha',
     }
 
@@ -30,25 +31,32 @@ class DataSource:
             case 'POST':
                 req = requests.post(
                     self.source[source],
-                    data=payload.data,
-                    # headers={'Content-Type':content_type},
-                    timeout=500
+                    json=payload.data,
+                    #headers={'Content-Type':content_type},
+                    timeout=60
                     )
             case 'GET':
                 req = requests.get(
                     self.source[source],
-                    data=payload.data,
-                    # headers={'Content-Type':content_type},
-                    timeout=500
+                    json=payload.data,
+                    #headers={'Content-Type':content_type},
+                    timeout=60
                     )
+            case _:
+                return {"status":505,"result":"bad method"}
+                
 
         if req.status_code == 200:
             self._result = req.json()
-            return {"status":200,"result":req.json()}
+            return req.json()
         else:
-            return {"status":req.status_code}
+            raise ValueError('bad request, error:',req.status_code)
         
     def dataframe(self)->DataFrame:
-        pass
+        """data stored in dataframe format"""
+        if self._result is not None:
+            return pd.DataFrame(self._result)
+        else:
+            raise ValueError('empty data, use request() method first')
 
 data_source:DataSource = DataSource()
