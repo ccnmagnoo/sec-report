@@ -7,7 +7,7 @@ type REGION = Literal['Metropolitana','Tarapaca','Los Rios','Valparaiso','Biobio
     "O'Higgins",'Ñuble','La Araucania','Los Lagos','Aysén']
 class Payload:
     """obtain json from"""
-    def __init__(self,*args:str, **kwargs:str) -> None:
+    def __init__(self, **kwargs:str) -> None:
         self.data = kwargs
 
     def __str__(self) -> str:
@@ -17,12 +17,12 @@ class Payload:
 class SecPayload(Payload):
     """Payload for affected_detail"""
     def __init__(self, date:datetime=datetime.now(),delay:int=0) -> None:
-        
+
         if delay>0:
             #delay
             date = datetime.now()- timedelta(hours=delay)
         super().__init__(mes=date.month,dia=date.day,hora=date.hour,anho=date.year)
-        
+
 class RegPayload(Payload):
     """Payload for REG_CLIENTS post request"""
     def __init__(self, region:REGION) -> None:

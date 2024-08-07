@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal
 import json
 import pandas as pd
@@ -9,8 +10,11 @@ type SOURCE_ID = Literal['nac_clients','reg_clients','server_hour','affected_agg
 type METHOD = Literal['POST','GET']
 class DataSource:
     """class with request data intrinsic"""
+
     _result = None
-    source:dict[SOURCE_ID,str] = {
+    _payload:Payload|None = None
+
+    _source:dict[SOURCE_ID,str] = {
         #context data
         'nac_clients':'https://apps.sec.cl/INTONLINEv1/ClientesAfectados/GetClientesNacional',
         'reg_clients': 'https://apps.sec.cl/INTONLINEv1/ClientesAfectados/GetClientesRegional',
@@ -22,41 +26,52 @@ class DataSource:
 
     def request(self, source:SOURCE_ID,
                 payload:Payload|None=None,
-                content_type:str='application/json;charset=utf-8',
+                # content_type:str='application/json;charset=utf-8',
                 fetch_method:METHOD='POST'  )->json:
         """web scrap request to www.sec.cl"""
+
         req = None
+        self._payload=payload
 
         match fetch_method:
             case 'POST':
                 req = requests.post(
-                    self.source[source],
+                    self._source[source],
                     json=payload.data,
                     #headers={'Content-Type':content_type},
                     timeout=60
                     )
             case 'GET':
                 req = requests.get(
-                    self.source[source],
+                    self._source[source],
                     json=payload.data,
                     #headers={'Content-Type':content_type},
                     timeout=60
                     )
             case _:
                 return {"status":505,"result":"bad method"}
-                
+
 
         if req.status_code == 200:
             self._result = req.json()
             return req.json()
         else:
             raise ValueError('bad request, error:',req.status_code)
-        
+
     def dataframe(self)->DataFrame:
         """data stored in dataframe format"""
         if self._result is not None:
-            return pd.DataFrame(self._result)
+            df = pd.DataFrame(self._result)
+            #format cols
+            df['FECHA_INT_STR'] = df['FECHA_INT_STR'].apply(self._srt2date)
+
+
+            return df
         else:
             raise ValueError('empty data, use request() method first')
+
+    def _srt2date(self,date_str:str)->datetime:
+        d,m,y = [int(it) for it in date_str.split('/')]
+        return datetime(day=d,year=y,month=m)
 
 data_source:DataSource = DataSource()
