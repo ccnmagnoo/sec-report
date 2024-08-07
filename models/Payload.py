@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 from typing import Literal
 
@@ -16,7 +16,11 @@ class Payload:
 
 class SecPayload(Payload):
     """Payload for affected_detail"""
-    def __init__(self, date:datetime=datetime.now()) -> None:
+    def __init__(self, date:datetime=datetime.now(),delay:int=0) -> None:
+        
+        if delay>0:
+            #delay
+            date = datetime.now()- timedelta(hours=delay)
         super().__init__(mes=date.month,dia=date.day,hora=date.hour,anho=date.year)
         
 class RegPayload(Payload):
