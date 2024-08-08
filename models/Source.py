@@ -28,6 +28,7 @@ class DataSource:
                 payload:Payload|None=None,
                 # content_type:str='application/json;charset=utf-8',
                 fetch_method:METHOD='POST'  )->json:
+
         """web scrap request to www.sec.cl"""
 
         req = None
@@ -58,20 +59,24 @@ class DataSource:
         else:
             raise ValueError('bad request, error:',req.status_code)
 
-    def dataframe(self)->DataFrame:
+    def dataframe(self,**data_transforms:dict[str:callable])->DataFrame:
         """data stored in dataframe format"""
-        if self._result is not None:
-            df = pd.DataFrame(self._result)
-            #format cols
-            df['FECHA_INT_STR'] = df['FECHA_INT_STR'].apply(self._srt2date)
-
-
-            return df
-        else:
+        #null point raise exception
+        if self._result is None:
             raise ValueError('empty data, use request() method first')
 
-    def _srt2date(self,date_str:str)->datetime:
-        d,m,y = [int(it) for it in date_str.split('/')]
-        return datetime(day=d,year=y,month=m)
+        #define df instance
+        df = pd.DataFrame(self._result)
+
+        #no transforms return df
+        if len(data_transforms)==0:
+            return df
+
+        #transforms apply
+        for source,transform in data_transforms.items():
+            df[source] = df[source].apply(transform)
+
+        #return transformed
+        return df
 
 data_source:DataSource = DataSource()
