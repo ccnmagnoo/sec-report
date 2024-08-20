@@ -28,7 +28,6 @@ class RegPayload(Payload):
     def __init__(self, region:REGION) -> None:
         super().__init__(region=str(region))
 
-
 if __name__=='__main__':
     payload = SecPayload()
     data = payload.data
