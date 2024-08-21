@@ -21,10 +21,11 @@ class SecPayload(Payload):
         if delay_hours>0 or delay_days>0:
             #delay
             date = datetime.now()- timedelta(hours=delay_hours,days=delay_days)
+            self.report_date = date
         super().__init__(mes=date.month,dia=date.day,hora=date.hour,anho=date.year)
 
 class RegPayload(Payload):
-    """Payload for REG_CLIENTS post request"""
+    """Payload for REG_CLIENTS or number regional clients data request"""
     def __init__(self, region:REGION) -> None:
         super().__init__(region=str(region))
 
