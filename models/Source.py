@@ -4,7 +4,7 @@ import json
 import pandas as pd
 from pandas import DataFrame
 import requests
-from models.Payload import Payload, DisconnectedPayload
+from models.Payload import Payload, AffectedPayload
 
 type SOURCE_ID = Literal['nac_clients','reg_clients','server_hour','affected_agg','affected_detail']
 type METHOD = Literal['POST','GET']
@@ -61,7 +61,7 @@ class DataSource:
     @property
     def report_date(self):
         """return date of report of disconnected from electric service"""
-        if isinstance(self._payload,DisconnectedPayload):
+        if isinstance(self._payload,AffectedPayload):
             return self._payload.report_date
     
     def dataframe(self,**data_transforms:dict[str:callable])->DataFrame:
