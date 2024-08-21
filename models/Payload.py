@@ -14,7 +14,7 @@ class Payload:
         """json object"""
         return json.dumps(self.data)
 
-class SecPayload(Payload):
+class DisconnectedPayload(Payload):
     """Payload for affected_detail"""
     def __init__(self, date:datetime=datetime.now(),delay_hours:int=0,delay_days:int=0) -> None:
 
@@ -30,6 +30,6 @@ class RegPayload(Payload):
         super().__init__(region=str(region))
 
 if __name__=='__main__':
-    payload = SecPayload()
+    payload = DisconnectedPayload()
     data = payload.data
     print('test',data)

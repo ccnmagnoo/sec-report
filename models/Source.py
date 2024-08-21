@@ -4,7 +4,7 @@ import json
 import pandas as pd
 from pandas import DataFrame
 import requests
-from models.Payload import Payload
+from models.Payload import Payload, DisconnectedPayload
 
 type SOURCE_ID = Literal['nac_clients','reg_clients','server_hour','affected_agg','affected_detail']
 type METHOD = Literal['POST','GET']
@@ -30,7 +30,6 @@ class DataSource:
                 fetch_method:METHOD='POST'  )->json:
 
         """web scrap request to www.sec.cl"""
-
         req = None
         self._payload=payload
 
@@ -59,6 +58,12 @@ class DataSource:
         else:
             raise ValueError('bad request, error:',req.status_code)
 
+    @property
+    def report_date(self):
+        """return date of report of disconnected from electric service"""
+        if isinstance(self._payload,DisconnectedPayload):
+            return self._payload.report_date
+    
     def dataframe(self,**data_transforms:dict[str:callable])->DataFrame:
         """data stored in dataframe format"""
         #null point raise exception
