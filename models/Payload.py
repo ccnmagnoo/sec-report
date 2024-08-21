@@ -18,7 +18,7 @@ class SecPayload(Payload):
     """Payload for affected_detail"""
     def __init__(self, date:datetime=datetime.now(),delay_hours:int=0,delay_days:int=0) -> None:
 
-        if delay_hours>0:
+        if delay_hours>0 or delay_days>0:
             #delay
             date = datetime.now()- timedelta(hours=delay_hours,days=delay_days)
         super().__init__(mes=date.month,dia=date.day,hora=date.hour,anho=date.year)
