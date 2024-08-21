@@ -4,9 +4,9 @@
 
 Electricity Quality Data Extractor is an application designed to extract and analyze data
 on the quality of electricity service from the
-[Subintendence of Electricity and Fuels (SEC) in Chile](www.sec.cl). This app provides
-users with detailed insights into electricity service performance, helping to identify
-areas for improvement and ensure compliance with regulatory standards.
+[Subintendence of Electricity and Fuels (SEC) in Chile](https://www.sec.cl/interrupciones-en-linea/?view_full_site=true).
+This app provides users with detailed insights into electricity service performance,
+helping to identify areas for improvement and ensure compliance with regulatory standards.
 
 ## Features
 
