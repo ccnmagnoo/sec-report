@@ -16,6 +16,7 @@ class Payload:
 
 class AffectedPayload(Payload):
     """Payload for affected_detail"""
+    report_date:datetime = datetime.now()
     def __init__(self, date:datetime=datetime.now(),delay_hours:int=0,delay_days:int=0) -> None:
 
         if delay_hours>0 or delay_days>0:
