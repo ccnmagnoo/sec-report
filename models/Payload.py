@@ -16,13 +16,12 @@ class Payload:
 
 class AffectedPayload(Payload):
     """Payload for affected_detail"""
-    report_date:datetime = datetime.now()
-    def __init__(self, date:datetime=datetime.now(),delay_hours:int=0,delay_days:int=0) -> None:
 
+    def __init__(self, date:datetime=datetime.now(),delay_hours:int=0,delay_days:int=0) -> None:
+        self.report_date = date
         if delay_hours>0 or delay_days>0:
             #delay
-            date = date - timedelta(hours=delay_hours,days=delay_days)
-            self.report_date = date
+            date = date - timedelta(hours=delay_hours,days=delay_days)     
         super().__init__(mes=date.month,dia=date.day,hora=date.hour,anho=date.year)
 
 class RegPayload(Payload):
