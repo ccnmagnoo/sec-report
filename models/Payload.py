@@ -20,7 +20,7 @@ class DisconnectedPayload(Payload):
 
         if delay_hours>0 or delay_days>0:
             #delay
-            date = datetime.now()- timedelta(hours=delay_hours,days=delay_days)
+            date = date - timedelta(hours=delay_hours,days=delay_days)
             self.report_date = date
         super().__init__(mes=date.month,dia=date.day,hora=date.hour,anho=date.year)
 
