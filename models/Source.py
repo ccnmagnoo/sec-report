@@ -62,6 +62,9 @@ class DataSource:
         """return date of report of disconnected from electric service"""
         if isinstance(self._payload,AffectedPayload):
             return self._payload.report_date
+    @property
+    def result(self):
+        return self._result
     
     def dataframe(self,**data_transforms:dict[str:callable])->DataFrame:
         """data stored in dataframe format"""
