@@ -1,6 +1,4 @@
-from pprint import pp
 from dash import Dash, html, dcc
-from pandas import DataFrame
 import plotly.express as px
 from storage.db import storage as data
 
