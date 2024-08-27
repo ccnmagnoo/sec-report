@@ -6,14 +6,16 @@ from storage.db import storage as data
 app = Dash(__name__)
 
 #graphs
-bar_graph = px.bar(data['affected_detail'],x='NOMBRE_REGION',y='CLIENTES_AFECTADOS',barmode='group')
+print(data)
+bar_graph = px.bar(data['affected_detail'],x='región',y='afectados',barmode='group')
 
 #app
 app.layout = html.Div(children=[
-    html.H1(children='Clientes sin Servicio'),
-    dcc.Graph(id='energy_disconnes',figure=bar_graph)
+    html.H1(children='clientes afectados'),
+    dcc.Graph(id='energy_quality',figure=bar_graph)
 ])
 
 #run
 if __name__ == '__main__':
     app.run(debug=True)
+    print('run succesfully')
